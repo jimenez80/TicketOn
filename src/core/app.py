@@ -7,8 +7,8 @@ def start_system():
     service = TicketService()
 
     ticket = service.create_ticket(
-        title="Primer ticket",
-        description="Ticket creado desde SQLite"
+        titulo="Primer ticket",
+        descripcion="Ticket creado desde SQLite"
     )
 
     tickets = service.get_all_tickets()

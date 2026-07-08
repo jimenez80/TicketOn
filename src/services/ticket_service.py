@@ -1,29 +1,21 @@
 from src.database.connection import SessionLocal
 from src.database.models import TicketDB
+from src.repositories.ticket_repository import TicketRepository
 
 class TicketService:
-    def create_ticket(self, title: str, description: str):
+    def __init__(self):
+        self.repository = TicketRepository()
 
-        db = SessionLocal()
-
-        ticket = TicketDB(
-            title=title,
-            description=description,
-            status="open"
-        )
-
-        db.add(ticket)
-        db.commit()
-        db.refresh(ticket)
-
-        db.close()
+    def create_ticket(self, titulo: str, descripcion: str):
+        ticket = self.repository.create(titulo, descripcion)
 
         return {
             "id": ticket.id,
             "title": ticket.title,
             "description": ticket.description,
             "status": ticket.status
-        }
+        }    
+       
     
     def delete_ticket(self, ticket_id: int):
         db = SessionLocal()

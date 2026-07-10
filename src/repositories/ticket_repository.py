@@ -20,3 +20,13 @@ class TicketRepository:
         db.close()
 
         return ticket
+
+    def get_all(self):
+
+        db = SessionLocal()
+
+        tickets = db.query(TicketDB).all()
+
+        db.close()
+
+        return tickets

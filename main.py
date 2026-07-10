@@ -5,8 +5,8 @@ def main():
     print("      Bienvenido a TicketOn")
     print("=" * 40)
 
-    result = start_system()
-    print(result)
+    estado_sistema = start_system()
+    print(estado_sistema)
 
 if __name__ == "__main__":
     main()

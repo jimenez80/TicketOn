@@ -30,3 +30,43 @@ class TicketRepository:
         db.close()
 
         return tickets
+    
+    def update_status(self, ticket_id: int, new_status: str):
+
+        db = SessionLocal()
+
+        ticket = db.query(TicketDB).filter(
+            TicketDB.id == ticket_id
+        ).first()
+
+        if ticket is None:
+            db.close()
+            return None
+
+        ticket.status = new_status
+
+        db.commit()
+        db.refresh(ticket)
+
+        db.close()
+
+        return ticket
+    
+    def delete(self, ticket_id: int):
+
+        db = SessionLocal()
+
+        ticket = db.query(TicketDB).filter(
+            TicketDB.id == ticket_id
+        ).first()
+
+        if ticket is None:
+            db.close()
+            return False
+
+        db.delete(ticket)
+        db.commit()
+
+        db.close()
+
+        return True

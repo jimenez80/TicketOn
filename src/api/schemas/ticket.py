@@ -10,3 +10,6 @@ class TicketResponse(BaseModel):
 class TicketCreate(BaseModel):
     title: str
     description: str
+
+class TicketUpdate(BaseModel):
+    status: str

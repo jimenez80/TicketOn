@@ -70,3 +70,27 @@ class TicketRepository:
         db.close()
 
         return True
+    
+    def get_by_id(self, ticket_id: int):
+
+        db = SessionLocal()
+
+        ticket = db.query(TicketDB).filter(
+            TicketDB.id == ticket_id
+        ).first()
+
+        db.close()
+
+        return ticket
+
+    def get_by_id(self, ticket_id: int):
+
+        db = SessionLocal()
+
+        ticket = db.query(TicketDB).filter(
+            TicketDB.id == ticket_id
+        ).first()
+
+        db.close()
+
+        return ticket

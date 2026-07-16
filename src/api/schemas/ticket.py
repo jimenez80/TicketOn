@@ -13,3 +13,6 @@ class TicketCreate(BaseModel):
 
 class TicketUpdate(BaseModel):
     status: str
+
+class MessageResponse(BaseModel):
+    message: str

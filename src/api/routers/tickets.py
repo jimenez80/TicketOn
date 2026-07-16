@@ -4,7 +4,8 @@ from src.services.ticket_service import TicketService
 from src.api.schemas.ticket import (
     TicketResponse,
     TicketCreate,
-    TicketUpdate
+    TicketUpdate,
+    MessageResponse
 )
 
 router = APIRouter()
@@ -73,3 +74,23 @@ def update_ticket(
         )
 
     return updated_ticket
+
+@router.delete(
+    "/tickets/{ticket_id}",
+    response_model=MessageResponse
+)
+def delete_ticket(ticket_id: int):
+
+    service = TicketService()
+
+    deleted = service.delete_ticket(ticket_id)
+
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="Ticket no encontrado"
+        )
+
+    return {
+        "message": "Ticket eliminado correctamente"
+    }

@@ -1,5 +1,6 @@
 from src.database.connection import SessionLocal
 from src.database.models import TicketDB
+from src.domain.enums.ticket_status import TicketStatus
 
 
 class TicketRepository:
@@ -11,7 +12,7 @@ class TicketRepository:
         ticket = TicketDB(
             title=titulo,
             description=descripcion,
-            status="open"
+            status=TicketStatus.OPEN
         )
 
         db.add(ticket)
@@ -21,17 +22,42 @@ class TicketRepository:
 
         return ticket
 
-    def get_all(self):
+    def get_all(self, status: TicketStatus | None = None):
 
         db = SessionLocal()
 
-        tickets = db.query(TicketDB).all()
+        query = db.query(TicketDB)
+
+        if status is not None:
+            query = query.filter(
+                TicketDB.status == status
+            )
+
+        tickets = query.all()
 
         db.close()
 
         return tickets
-    
-    def update_status(self, ticket_id: int, new_status: str):
+
+    def get_by_id(self, ticket_id: int):
+
+        db = SessionLocal()
+
+        ticket = db.query(TicketDB).filter(
+            TicketDB.id == ticket_id
+        ).first()
+
+        db.close()
+
+        return ticket
+
+    def update(
+        self,
+        ticket_id: int,
+        title: str,
+        description: str,
+        status: TicketStatus
+    ):
 
         db = SessionLocal()
 
@@ -43,7 +69,9 @@ class TicketRepository:
             db.close()
             return None
 
-        ticket.status = new_status
+        ticket.title = title
+        ticket.description = description
+        ticket.status = status
 
         db.commit()
         db.refresh(ticket)
@@ -51,7 +79,7 @@ class TicketRepository:
         db.close()
 
         return ticket
-    
+
     def delete(self, ticket_id: int):
 
         db = SessionLocal()
@@ -70,27 +98,3 @@ class TicketRepository:
         db.close()
 
         return True
-    
-    def get_by_id(self, ticket_id: int):
-
-        db = SessionLocal()
-
-        ticket = db.query(TicketDB).filter(
-            TicketDB.id == ticket_id
-        ).first()
-
-        db.close()
-
-        return ticket
-
-    def get_by_id(self, ticket_id: int):
-
-        db = SessionLocal()
-
-        ticket = db.query(TicketDB).filter(
-            TicketDB.id == ticket_id
-        ).first()
-
-        db.close()
-
-        return ticket

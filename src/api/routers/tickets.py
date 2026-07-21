@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 
 from src.services.ticket_service import TicketService
+from src.domain.enums.ticket_status import TicketStatus
 from src.api.schemas.ticket import (
     TicketResponse,
     TicketCreate,
@@ -10,17 +11,22 @@ from src.api.schemas.ticket import (
 
 router = APIRouter()
 
-router = APIRouter()
 
 @router.get(
     "/tickets",
     response_model=list[TicketResponse]
 )
-def get_all_tickets():
+def get_all_tickets(
+    status: TicketStatus | None = Query(
+        default=None,
+        description="Filtrar tickets por estado"
+    )
+):
 
     service = TicketService()
 
-    return service.get_all_tickets()
+    return service.get_all_tickets(status)
+
 
 @router.get(
     "/tickets/{ticket_id}",
@@ -39,6 +45,8 @@ def get_ticket_by_id(ticket_id: int):
         )
 
     return ticket
+
+
 @router.post(
     "/tickets",
     response_model=TicketResponse
@@ -51,6 +59,8 @@ def create_ticket(ticket: TicketCreate):
         titulo=ticket.title,
         descripcion=ticket.description
     )
+
+
 @router.put(
     "/tickets/{ticket_id}",
     response_model=TicketResponse
@@ -62,9 +72,11 @@ def update_ticket(
 
     service = TicketService()
 
-    updated_ticket = service.update_ticket_status(
+    updated_ticket = service.update_ticket(
         ticket_id=ticket_id,
-        new_status=ticket.status
+        title=ticket.title,
+        description=ticket.description,
+        status=ticket.status
     )
 
     if updated_ticket is None:
@@ -74,6 +86,7 @@ def update_ticket(
         )
 
     return updated_ticket
+
 
 @router.delete(
     "/tickets/{ticket_id}",

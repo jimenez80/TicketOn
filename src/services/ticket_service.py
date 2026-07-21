@@ -1,4 +1,5 @@
 from src.repositories.ticket_repository import TicketRepository
+from src.domain.enums.ticket_status import TicketStatus
 
 
 class TicketService:
@@ -20,9 +21,9 @@ class TicketService:
 
         return self._to_dict(ticket)
 
-    def get_all_tickets(self):
+    def get_all_tickets(self, status: TicketStatus | None = None):
 
-        tickets = self.repository.get_all()
+        tickets = self.repository.get_all(status)
 
         result = []
 
@@ -40,9 +41,20 @@ class TicketService:
 
         return self._to_dict(ticket)
 
-    def update_ticket_status(self, ticket_id: int, new_status: str):
+    def update_ticket(
+        self,
+        ticket_id: int,
+        title: str,
+        description: str,
+        status: TicketStatus
+    ):
 
-        ticket = self.repository.update_status(ticket_id, new_status)
+        ticket = self.repository.update(
+            ticket_id,
+            title,
+            description,
+            status
+        )
 
         if ticket is None:
             return None
@@ -52,12 +64,3 @@ class TicketService:
     def delete_ticket(self, ticket_id: int):
 
         return self.repository.delete(ticket_id)
-        
-    def get_ticket_by_id(self, ticket_id: int):
-
-        ticket = self.repository.get_by_id(ticket_id)
-
-        if ticket is None:
-            return None
-
-        return self._to_dict(ticket)
